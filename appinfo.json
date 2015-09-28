@@ -9,8 +9,12 @@
   "watchapp": {
     "watchface": true
   },
+  "capabilities": [
+     "configurable"
+  ],
   "appKeys": {
-    "dummy": 0
+    "KEY_CHOSEN_COLOR": 0,
+		"KEY_RANDOM_COLOR": 1
   },
   "resources": {
     "media": [

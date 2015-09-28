@@ -1,5 +1,8 @@
 #include <pebble.h>
 
+// App keys
+#define KEY_CHOSEN_COLOR 0
+
 Window *my_window;
 Layer *background_layer;
 TextLayer *time_layer, *lol_layer;
@@ -12,7 +15,7 @@ GFont custom_font;
   #define TOTAL_COLORS 1
 #endif
 GColor color_array[TOTAL_COLORS];
-int current_color;
+int current_color, chosen_color;
 GColor color_top_bg, color_top_text;
 GColor color_bot_bg, color_bot_text;
 
@@ -70,9 +73,15 @@ void update_lol() {
 
 // Update the colors
 void update_colors() {
-	current_color = get_random_number(current_color, TOTAL_COLORS);
+	if(chosen_color==-1) {
+		current_color = get_random_number(current_color, TOTAL_COLORS);
+	} else {
+		current_color = chosen_color;
+	}
+	
 	color_top_bg = color_bot_text = color_array[current_color];
 	color_bot_bg = color_top_text = GColorWhite;
+	
 	text_layer_set_text_color(time_layer, color_top_text);
 	text_layer_set_text_color(lol_layer, color_bot_text);
 	layer_mark_dirty(background_layer);	
@@ -110,6 +119,17 @@ void init_colors() {
 	color_bot_bg = color_top_text = GColorWhite;	
 }
 
+void inbox_received_handler(DictionaryIterator *iter, void *context) {
+  Tuple *chosen_color_t = dict_find(iter, KEY_CHOSEN_COLOR);
+
+	// set some global flags to random or otherwise then call the update color function
+  if (chosen_color_t) {
+		chosen_color = chosen_color_t->value->int32;
+    persist_write_int(KEY_CHOSEN_COLOR, chosen_color);
+  }
+	update_colors();
+}
+
 void main_window_load() {
   Layer *window_layer = window_get_root_layer(my_window);
 	GRect bounds = layer_get_bounds(window_layer);	
@@ -134,6 +154,13 @@ void main_window_load() {
   layer_add_child(window_layer, background_layer);
   layer_add_child(window_layer, text_layer_get_layer(time_layer));
   layer_add_child(window_layer, text_layer_get_layer(lol_layer));
+	
+	// If any persistant data then load those and update colors
+  if (persist_read_int(KEY_CHOSEN_COLOR)) {
+    chosen_color = persist_read_int(KEY_CHOSEN_COLOR);
+		update_colors();
+  }
+
 }
 
 void main_window_unload() {
@@ -167,6 +194,9 @@ void init() {
 		
   // Subcribe to ticker 
   tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);	
+	
+  app_message_register_inbox_received(inbox_received_handler);
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
 
 void deinit() {
