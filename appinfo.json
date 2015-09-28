@@ -1,0 +1,24 @@
+{
+  "uuid": "f2eb291e-8ae0-4129-8a86-31052e253dca",
+  "shortName": "LOL Time",
+  "longName": "LOL Time",
+  "companyName": "Marwan Zogheib",
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt"],
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": [
+		  {
+		    "type": "font",
+		    "name": "CUSTOM_FONT_42",
+		    "file": "leco.ttf"
+		  }
+		]
+  }
+}
