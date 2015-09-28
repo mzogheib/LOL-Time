@@ -17,20 +17,24 @@
   </style>
   </head>
 
-  <body>
+  <body onload="showMe('chosen_color_div')">
     <h1 class='title'>LOL Time Configuration</h1>
 
     <div class='item-container'>
       <div class='item-container-header'>Color</div>
       <div class='item-container-content'>
-        <label class='item'>
+       <label class='item'>
+         Random
+         <input id='random_color_checkbox' type='checkbox' class='item-toggle' onclick="showMe('chosen_color_div')">
+       </label>
+			 
+			 <div id='chosen_color_div'>
+			  <label class='item' >
           Your Choice
           <input id='chosen_color_picker' type='text' class='item-color item-color-sunny' value='#000000'>
         </label>
-        <label class='item'>
-          Random
-          <input id='random_color_checkbox' type='checkbox' class='item-toggle'>
-        </label>
+ 			 </div>
+			 
       </div>
     </div>
 
@@ -46,6 +50,20 @@
     </div>
   </body>
   <script>
+	
+	// Displays the color selector if Random Color toggle is unchecked.
+	// Inspired by below link. But screen flicks when toggling. Look into fixing this.
+	// http://stackoverflow.com/questions/18421082/show-hide-div-if-checkbox-selected
+	function showMe (box) {
+	    var randomColorCheckbox = document.getElementById('random_color_checkbox');
+      if(randomColorCheckbox.checked){
+		    document.getElementById(box).style.display = "none";
+      } else {
+	    	document.getElementById(box).style.display = "block";
+			}
+	}
+	
+	
   function getConfigData() {
 		// These IDs correspond to those in the HTML tags
     var chosenColorPicker = document.getElementById('chosen_color_picker');
