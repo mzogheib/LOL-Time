@@ -122,11 +122,11 @@ void init_colors() {
 void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *chosen_color_t = dict_find(iter, KEY_CHOSEN_COLOR);
 
-	// set some global flags to random or otherwise then call the update color function
   if (chosen_color_t) {
 		chosen_color = chosen_color_t->value->int32;
-	  APP_LOG(APP_LOG_LEVEL_INFO, "In inbox_received_handler: chosen_color = %d", chosen_color);
-		
+#ifdef PBL_PLATFORM_APLITE
+		chosen_color = -1;
+#endif
     persist_write_int(KEY_CHOSEN_COLOR, chosen_color);
   }
 	update_colors();
