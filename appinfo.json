@@ -3,7 +3,7 @@
   "shortName": "LOL Time",
   "longName": "LOL Time",
   "companyName": "Marwan Zogheib",
-  "versionLabel": "1.0",
+  "versionLabel": "1.1",
   "sdkVersion": "3",
   "targetPlatforms": ["aplite", "basalt"],
   "watchapp": {
@@ -13,8 +13,7 @@
      "configurable"
   ],
   "appKeys": {
-    "KEY_CHOSEN_COLOR": 0,
-		"KEY_RANDOM_COLOR": 1
+    "KEY_CHOSEN_COLOR": 0
   },
   "resources": {
     "media": [
