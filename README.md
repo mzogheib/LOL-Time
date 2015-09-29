@@ -1,5 +1,5 @@
 # LOL-Time
-LOL Time watch face for Pebble and Pebble Time.
+LOL Time watchface for Pebble and Pebble Time.
 
 A new LOL is displayed every minute.
 
