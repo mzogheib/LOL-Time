@@ -107,10 +107,10 @@ void init_colors() {
 	color_array[0] = GColorBlack;
 #ifdef PBL_PLATFORM_BASALT 
 	color_array[1] = GColorRed;
-	color_array[2] = GColorBlue;
-	color_array[3] = GColorIslamicGreen;
-	color_array[4] = GColorFashionMagenta;
-	color_array[5] = GColorOrange;
+	color_array[2] = GColorFashionMagenta;
+	color_array[3] = GColorOrange;
+	color_array[4] = GColorIslamicGreen;
+	color_array[5] = GColorBlue;
 	color_array[6] = GColorImperialPurple;
 #endif
 	current_color = -1;
@@ -125,6 +125,8 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
 	// set some global flags to random or otherwise then call the update color function
   if (chosen_color_t) {
 		chosen_color = chosen_color_t->value->int32;
+	  APP_LOG(APP_LOG_LEVEL_INFO, "In inbox_received_handler: chosen_color = %d", chosen_color);
+		
     persist_write_int(KEY_CHOSEN_COLOR, chosen_color);
   }
 	update_colors();
@@ -156,6 +158,7 @@ void main_window_load() {
   layer_add_child(window_layer, text_layer_get_layer(lol_layer));
 	
 	// If any persistant data then load those and update colors
+	chosen_color = -1;
   if (persist_read_int(KEY_CHOSEN_COLOR)) {
     chosen_color = persist_read_int(KEY_CHOSEN_COLOR);
 		update_colors();
@@ -184,7 +187,7 @@ void init() {
 	
   window_stack_push(my_window, true);
 		
-  // Time for display on start up
+  // Time & LOL for display on start up
 	init_finished = 0;
   time_t temp_time = time(NULL); 
   struct tm *tick_time = localtime(&temp_time);

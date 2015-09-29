@@ -14,11 +14,12 @@
     color: #888888;
     text-align: center;
   }
+
   </style>
   </head>
 
   <body onload="showMe('chosen_color_div')">
-    <h1 class='title'>LOL Time Configuration</h1>
+    <h1 class='title'>Configuration</h1>
 
     <div class='item-container'>
       <div class='item-container-header'>Color</div>
@@ -29,12 +30,36 @@
        </label>
 			 
 			 <div id='chosen_color_div'>
-			  <label class='item' >
-          Your Choice
-          <input id='chosen_color_picker' type='text' class='item-color item-color-sunny' value='#000000'>
-        </label>
- 			 </div>
-			 
+			  <div class="item-container-content">
+			    <label class="color_label">
+			      Black
+			      <input type="radio" class="item-radio" name="radio-1" value="0" checked>
+			    </label>
+			    <label class="color_label">
+			      Red
+			      <input type="radio" class="item-radio" name="radio-1" value="1">
+			    </label>
+			    <label class="color_label">
+			      Fashion Magenta
+			      <input type="radio" class="item-radio" name="radio-1" value="2">
+			    </label>
+			    <label class="color_label">
+			      Orange
+			      <input type="radio" class="item-radio" name="radio-1" value="3">
+			    </label>
+			    <label class="color_label">
+			      Islamic Green
+			      <input type="radio" class="item-radio" name="radio-1" value="4">
+			    </label>
+			    <label class="color_label">
+			      Blue
+			      <input type="radio" class="item-radio" name="radio-1" value="5">
+			    </label>
+			    <label class="color_label">
+			      Imperial Purple
+			      <input type="radio" class="item-radio" name="radio-1" value="6">
+			    </label>
+			 	</div>
       </div>
     </div>
 
@@ -52,32 +77,37 @@
   <script>
 	
 	// Displays the color selector if Random Color toggle is unchecked.
-	// Inspired by below link. But screen flicks when toggling. Look into fixing this.
+	// But screen flicks when toggling. Look into fixing this.
 	// http://stackoverflow.com/questions/18421082/show-hide-div-if-checkbox-selected
 	function showMe (box) {
-	    var randomColorCheckbox = document.getElementById('random_color_checkbox');
-      if(randomColorCheckbox.checked){
+      if(document.getElementById('random_color_checkbox').checked){
 		    document.getElementById(box).style.display = "none";
       } else {
 	    	document.getElementById(box).style.display = "block";
 			}
 	}
-	
-	
+		
   function getConfigData() {
 		// These IDs correspond to those in the HTML tags
-    var chosenColorPicker = document.getElementById('chosen_color_picker');
     var randomColorCheckbox = document.getElementById('random_color_checkbox');
+    var chosenColorRadio = document.getElementsByName('radio-1');
+ 
+ 	 	for(var i=0; i<chosenColorRadio.length; i++) {
+ 	 		if(chosenColorRadio[i].checked) {
+ 	 			// This is the selected color so break here
+				break;
+ 	 		}
+ 	 	}
  
  	 	// Construct the dictionary to pass back to the watch
     var options = {
-      'chosen_color': chosenColorPicker.value,
-      'random_color': randomColorCheckbox.checked
+      'random_color': randomColorCheckbox.checked,
+			'chosen_color': parseInt(chosenColorRadio[i].value,10)
     };
 
     // Save for next launch
-    localStorage['chosen_color'] = options['chosen_color'];
     localStorage['random_color'] = options['random_color'];
+    localStorage['chosen_color'] = options['chosen_color'];
 
     console.log('Got options: ' + JSON.stringify(options));
     return options;
@@ -99,7 +129,6 @@
   var submitButton = document.getElementById('submit_button');
   submitButton.addEventListener('click', function() {
     console.log('Submit');
-
     // Set the return URL depending on the runtime environment
     var return_to = getQueryParam('return_to', 'pebblejs://close#');
     document.location = return_to + encodeURIComponent(JSON.stringify(getConfigData()));
@@ -107,13 +136,14 @@
 
 	// Run this on open to make sure the existing config is displayed
   (function() {
-    var chosenColorPicker = document.getElementById('chosen_color_picker');
     var randomColorCheckbox = document.getElementById('random_color_checkbox');
+    var chosenColorRadio = document.getElementsByName('radio-1');
+
 
     // Load any previously saved configuration, if available
     if(localStorage['random_color']) {
       randomColorCheckbox.checked = JSON.parse(localStorage['random_color']);
-      chosenColorPicker.value = localStorage['chosen_color'];
+      chosenColorRadio[parseInt(localStorage['chosen_color'],10)].checked = 'true';
     }
   })();
   </script>

@@ -3,7 +3,8 @@ Pebble.addEventListener('ready', function() {
 });
 
 Pebble.addEventListener('showConfiguration', function() {
-  var url = 'http://gethektik.com/Pebble/LOL-Time-config/';
+  //var url = 'http://0.0.0.0:8080/'
+	var url = 'http://gethektik.com/Pebble/LOL-Time-config/';
   console.log('Showing configuration page: ' + url);
 
   Pebble.openURL(url);
@@ -19,7 +20,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
   if(configData['random_color'] === true) {
     dict['KEY_CHOSEN_COLOR'] = -1;
   } else {
-    dict['KEY_CHOSEN_COLOR'] = 1;
+    dict['KEY_CHOSEN_COLOR'] = configData['chosen_color'];
   }
 
   // Send to watchapp
