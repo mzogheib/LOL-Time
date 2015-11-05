@@ -83,7 +83,6 @@ void update_colors() {
 	
 	color_top_bg = color_bot_text = color_array[current_color];
 	color_bot_bg = color_top_text = GColorWhite;
-	APP_LOG(APP_LOG_LEVEL_INFO, "Update_Colors: color_top_bg=%d", current_color);
 
 	text_layer_set_text_color(time_layer, color_top_text);
 	text_layer_set_text_color(lol_layer, color_bot_text);
@@ -92,16 +91,11 @@ void update_colors() {
 
 // Ticker handler
 void handle_tick(struct tm *tick_time, TimeUnits units) {
-	APP_LOG(APP_LOG_LEVEL_INFO, "Handle tick: before if.");
 	if(init_finished==1) {
 		update_time(tick_time);
-		APP_LOG(APP_LOG_LEVEL_INFO, "Handle tick: after update_time.");
 		update_lol();
-		APP_LOG(APP_LOG_LEVEL_INFO, "Handle tick: after update_lol. ");
 #ifdef PBL_PLATFORM_BASALT 
-
 		update_colors();
-		APP_LOG(APP_LOG_LEVEL_INFO, "Handle tick: after update_colors.");
 #endif
 	}
 	init_finished = 1;

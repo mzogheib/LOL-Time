@@ -3,7 +3,7 @@
   "shortName": "LOL Time",
   "longName": "LOL Time",
   "companyName": "Marwan Zogheib",
-  "versionLabel": "1.1",
+  "versionLabel": "1.2",
   "sdkVersion": "3",
   "targetPlatforms": ["aplite", "basalt"],
   "watchapp": {
