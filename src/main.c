@@ -73,15 +73,18 @@ void update_lol() {
 
 // Update the colors
 void update_colors() {
+	// If user has selected random colors then chosen is passed to Pebble as -1
+	// Otherwise, it is set to what ever they selected
 	if(chosen_color==-1) {
-		current_color = get_random_number(current_color, TOTAL_COLORS);
+		current_color = get_random_number(current_color, TOTAL_COLORS);	
 	} else {
 		current_color = chosen_color;
 	}
 	
 	color_top_bg = color_bot_text = color_array[current_color];
 	color_bot_bg = color_top_text = GColorWhite;
-	
+	APP_LOG(APP_LOG_LEVEL_INFO, "Update_Colors: color_top_bg=%d", current_color);
+
 	text_layer_set_text_color(time_layer, color_top_text);
 	text_layer_set_text_color(lol_layer, color_bot_text);
 	layer_mark_dirty(background_layer);	
@@ -89,10 +92,17 @@ void update_colors() {
 
 // Ticker handler
 void handle_tick(struct tm *tick_time, TimeUnits units) {
+	APP_LOG(APP_LOG_LEVEL_INFO, "Handle tick: before if.");
 	if(init_finished==1) {
 		update_time(tick_time);
+		APP_LOG(APP_LOG_LEVEL_INFO, "Handle tick: after update_time.");
 		update_lol();
+		APP_LOG(APP_LOG_LEVEL_INFO, "Handle tick: after update_lol. ");
+#ifdef PBL_PLATFORM_BASALT 
+
 		update_colors();
+		APP_LOG(APP_LOG_LEVEL_INFO, "Handle tick: after update_colors.");
+#endif
 	}
 	init_finished = 1;
 }
@@ -113,8 +123,9 @@ void init_colors() {
 	color_array[5] = GColorBlue;
 	color_array[6] = GColorImperialPurple;
 #endif
-	current_color = -1;
-	current_color = get_random_number(current_color, TOTAL_COLORS);
+	// Random colors by default. Will be black if Aplite.
+	chosen_color = -1;
+	current_color = get_random_number(-1, TOTAL_COLORS);
 	color_top_bg = color_bot_text = color_array[current_color];
 	color_bot_bg = color_top_text = GColorWhite;	
 }
@@ -158,11 +169,12 @@ void main_window_load() {
   layer_add_child(window_layer, text_layer_get_layer(lol_layer));
 	
 	// If any persistant data then load those and update colors
-	chosen_color = -1;
+#ifdef PBL_PLATFORM_BASALT 
   if (persist_read_int(KEY_CHOSEN_COLOR)) {
     chosen_color = persist_read_int(KEY_CHOSEN_COLOR);
 		update_colors();
   }
+#endif
 
 }
 
