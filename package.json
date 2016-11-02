@@ -2,7 +2,9 @@
   "version": "1.3.0",
   "author": "Marwan Zogheib",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "pebble-clay": "^1.0.3"
+  },
   "keywords": [
     "pebble-app"
   ],
@@ -26,9 +28,9 @@
     "projectType": "native",
     "uuid": "f2eb291e-8ae0-4129-8a86-31052e253dca",
     "messageKeys": {
-      "KEY_CHOSEN_COLOR": 0
+      "CHOSEN_COLOR": 0
     },
-    "enableMultiJS": false,
+    "enableMultiJS": true,
     "displayName": "LOL Time",
     "watchapp": {
       "onlyShownOnCommunication": false,
@@ -43,5 +45,5 @@
       "configurable"
     ]
   },
-  "name": "LOL Time"
+  "name": "lol-time"
 }

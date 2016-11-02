@@ -1,15 +1,12 @@
 #include <pebble.h>
 
-// App keys
-#define KEY_CHOSEN_COLOR 0
-
 Window *my_window;
 Layer *background_layer;
 TextLayer *time_layer, *lol_layer;
 
 GFont custom_font;
 
-#ifdef PBL_PLATFORM_BASALT 
+#ifdef PBL_PLATFORM_BASALT
   #define TOTAL_COLORS 7
 #elif PBL_PLATFORM_APLITE
   #define TOTAL_COLORS 1
@@ -38,28 +35,28 @@ static char *write_time(struct tm tick_time) {
     // Use 12 hour format
     strftime(buffer, sizeof("00:00"), "%I:%M", &tick_time);
   }
-   
+
   // Strip leading zero
   if(buffer[0]=='0') strcpy(buffer, buffer+1);
-  
+
   return (char *)buffer;
 }
 
 // Return a random number that is different to the current number
 int get_random_number(int current_num, int total_num) {
   int i;
-  
+
   // Get a random number
   i = rand()%total_num;
-  
+
   // If it's the same as the current then try again until different
   while(i==current_num) {
     i = rand()%total_num;
   }
-  
+
   return i;
 }
-	
+
 // Update the time and lol
 void update_time(struct tm *tick_time) {
   text_layer_set_text(time_layer, write_time(*tick_time));
@@ -76,17 +73,17 @@ void update_colors() {
 	// If user has selected random colors then chosen is passed to Pebble as -1
 	// Otherwise, it is set to what ever they selected
 	if(chosen_color==-1) {
-		current_color = get_random_number(current_color, TOTAL_COLORS);	
+		current_color = get_random_number(current_color, TOTAL_COLORS);
 	} else {
 		current_color = chosen_color;
 	}
-	
+
 	color_top_bg = color_bot_text = color_array[current_color];
 	color_bot_bg = color_top_text = GColorWhite;
 
 	text_layer_set_text_color(time_layer, color_top_text);
 	text_layer_set_text_color(lol_layer, color_bot_text);
-	layer_mark_dirty(background_layer);	
+	layer_mark_dirty(background_layer);
 }
 
 // Ticker handler
@@ -94,7 +91,7 @@ void handle_tick(struct tm *tick_time, TimeUnits units) {
 	if(init_finished==1) {
 		update_time(tick_time);
 		update_lol();
-#ifdef PBL_PLATFORM_BASALT 
+#ifdef PBL_PLATFORM_BASALT
 		update_colors();
 #endif
 	}
@@ -109,7 +106,7 @@ static void draw_background(Layer *layer, GContext *ctx) {
 
 void init_colors() {
 	color_array[0] = GColorBlack;
-#ifdef PBL_PLATFORM_BASALT 
+#ifdef PBL_PLATFORM_BASALT
 	color_array[1] = GColorRed;
 	color_array[2] = GColorFashionMagenta;
 	color_array[3] = GColorOrange;
@@ -121,51 +118,52 @@ void init_colors() {
 	chosen_color = -1;
 	current_color = get_random_number(-1, TOTAL_COLORS);
 	color_top_bg = color_bot_text = color_array[current_color];
-	color_bot_bg = color_top_text = GColorWhite;	
+	color_bot_bg = color_top_text = GColorWhite;
 }
 
 void inbox_received_handler(DictionaryIterator *iter, void *context) {
-  Tuple *chosen_color_t = dict_find(iter, KEY_CHOSEN_COLOR);
+  Tuple *chosen_color_t = dict_find(iter, MESSAGE_KEY_CHOSEN_COLOR);
 
   if (chosen_color_t) {
 		chosen_color = chosen_color_t->value->int32;
 #ifdef PBL_PLATFORM_APLITE
 		chosen_color = -1;
 #endif
-    persist_write_int(KEY_CHOSEN_COLOR, chosen_color);
+
+    persist_write_int(MESSAGE_KEY_CHOSEN_COLOR, chosen_color);
   }
 	update_colors();
 }
 
 void main_window_load() {
   Layer *window_layer = window_get_root_layer(my_window);
-	GRect bounds = layer_get_bounds(window_layer);	
-	
+	GRect bounds = layer_get_bounds(window_layer);
+
 	custom_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_CUSTOM_FONT_42));
-	
+
 	background_layer = layer_create(bounds);
   layer_set_update_proc(background_layer, draw_background);
-	
+
 	time_layer = text_layer_create(GRect(0, 14, bounds.size.w, 80));
 	text_layer_set_background_color(time_layer, GColorClear);
 	text_layer_set_text_color(time_layer, color_top_text);
 	text_layer_set_font(time_layer, custom_font);
 	text_layer_set_text_alignment(time_layer, GTextAlignmentCenter);
-	
+
 	lol_layer = text_layer_create(GRect(0, 98, bounds.size.w, 80));
 	text_layer_set_background_color(lol_layer, GColorClear);
 	text_layer_set_text_color(lol_layer, color_bot_text);
 	text_layer_set_font(lol_layer, custom_font);
 	text_layer_set_text_alignment(lol_layer, GTextAlignmentCenter);
-	
+
   layer_add_child(window_layer, background_layer);
   layer_add_child(window_layer, text_layer_get_layer(time_layer));
   layer_add_child(window_layer, text_layer_get_layer(lol_layer));
-	
+
 	// If any persistant data then load those and update colors
-#ifdef PBL_PLATFORM_BASALT 
-  if (persist_read_int(KEY_CHOSEN_COLOR)) {
-    chosen_color = persist_read_int(KEY_CHOSEN_COLOR);
+#ifdef PBL_PLATFORM_BASALT
+  if (persist_read_int(MESSAGE_KEY_CHOSEN_COLOR)) {
+    chosen_color = persist_read_int(MESSAGE_KEY_CHOSEN_COLOR);
 		update_colors();
   }
 #endif
@@ -181,29 +179,29 @@ void main_window_unload() {
 
 void init() {
   my_window = window_create();
-	
+
 	srand(time(NULL));
 	init_colors();
-	
+
   // Set handlers to manage the elements inside the Window
   window_set_window_handlers(my_window, (WindowHandlers) {
     .load = main_window_load,
     .unload = main_window_unload
   });
-	
+
   window_stack_push(my_window, true);
-		
+
   // Time & LOL for display on start up
 	init_finished = 0;
-  time_t temp_time = time(NULL); 
+  time_t temp_time = time(NULL);
   struct tm *tick_time = localtime(&temp_time);
 	update_time(tick_time);
 	current_lol = -1;
 	update_lol();
-		
-  // Subcribe to ticker 
-  tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);	
-	
+
+  // Subcribe to ticker
+  tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);
+
   app_message_register_inbox_received(inbox_received_handler);
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
