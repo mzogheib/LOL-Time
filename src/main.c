@@ -6,9 +6,9 @@ TextLayer *time_layer, *lol_layer;
 
 GFont custom_font;
 
-#ifdef PBL_PLATFORM_BASALT
+#ifdef PBL_COLOR
 #define TOTAL_COLORS 7
-#elif PBL_PLATFORM_APLITE
+#elif PBL_BW
 #define TOTAL_COLORS 1
 #endif
 GColor color_array[TOTAL_COLORS];
@@ -91,7 +91,7 @@ void handle_tick(struct tm *tick_time, TimeUnits units) {
     if(init_finished==1) {
         update_time(tick_time);
         update_lol();
-#ifdef PBL_PLATFORM_BASALT
+#ifdef PBL_COLOR
         update_colors();
 #endif
     }
@@ -106,7 +106,7 @@ static void draw_background(Layer *layer, GContext *ctx) {
 
 void init_colors() {
     color_array[0] = GColorBlack;
-#ifdef PBL_PLATFORM_BASALT
+#ifdef PBL_COLOR
     color_array[1] = GColorRed;
     color_array[2] = GColorFashionMagenta;
     color_array[3] = GColorOrange;
@@ -126,7 +126,7 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
 
     if (chosen_color_t) {
         chosen_color = chosen_color_t->value->int32;
-#ifdef PBL_PLATFORM_APLITE
+#ifdef PBL_BW
         chosen_color = -1;
 #endif
 
@@ -161,7 +161,7 @@ void main_window_load() {
     layer_add_child(window_layer, text_layer_get_layer(lol_layer));
 
     // If any persistant data then load those and update colors
-#ifdef PBL_PLATFORM_BASALT
+#ifdef PBL_COLOR
     if (persist_read_int(MESSAGE_KEY_CHOSEN_COLOR)) {
         chosen_color = persist_read_int(MESSAGE_KEY_CHOSEN_COLOR);
         update_colors();
