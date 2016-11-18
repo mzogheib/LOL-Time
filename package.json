@@ -1,0 +1,56 @@
+{
+  "version": "1.4.0",
+  "author": "Marwan Zogheib",
+  "private": true,
+  "dependencies": {
+    "pebble-clay": "^1.0.3"
+  },
+  "keywords": [
+    "pebble-app"
+  ],
+  "pebble": {
+    "sdkVersion": "3",
+    "resources": {
+      "media": [
+        {
+          "menuIcon": true,
+          "type": "png",
+          "name": "IMAGE_MENU",
+          "file": "menu.png"
+        },
+        {
+          "type": "font",
+          "name": "CUSTOM_FONT_42",
+          "file": "leco.ttf"
+        },
+        {
+          "type": "font",
+          "name": "CUSTOM_FONT_55",
+          "file": "leco.ttf"
+        }
+      ]
+    },
+    "projectType": "native",
+    "uuid": "f2eb291e-8ae0-4129-8a86-31052e253dca",
+    "messageKeys": {
+      "CHOSEN_COLOR": 0
+    },
+    "enableMultiJS": true,
+    "displayName": "LOL Time",
+    "watchapp": {
+      "onlyShownOnCommunication": false,
+      "hiddenApp": false,
+      "watchface": true
+    },
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "diorite",
+      "emery"
+    ],
+    "capabilities": [
+      "configurable"
+    ]
+  },
+  "name": "lol-time"
+}
