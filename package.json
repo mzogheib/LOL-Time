@@ -22,6 +22,11 @@
           "type": "font",
           "name": "CUSTOM_FONT_42",
           "file": "leco.ttf"
+        },
+        {
+          "type": "font",
+          "name": "CUSTOM_FONT_55",
+          "file": "leco.ttf"
         }
       ]
     },
@@ -39,7 +44,9 @@
     },
     "targetPlatforms": [
       "aplite",
-      "basalt"
+      "basalt",
+      "diorite",
+      "emery"
     ],
     "capabilities": [
       "configurable"
