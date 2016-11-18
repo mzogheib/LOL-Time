@@ -16,6 +16,12 @@ int current_color, chosen_color;
 GColor color_top_bg, color_top_text;
 GColor color_bot_bg, color_bot_text;
 
+#ifdef PBL_PLATFORM_EMERY
+#define CUSTOM_FONT RESOURCE_ID_CUSTOM_FONT_55
+#else
+#define CUSTOM_FONT RESOURCE_ID_CUSTOM_FONT_42
+#endif
+
 int current_lol;
 #define TOTAL_LOL 7
 char lol_array[TOTAL_LOL][5] = {"LOL", "LOLS", "LULZ", "ROFL", "LMAO", "HAHA", "HEHE"};
@@ -139,18 +145,18 @@ void main_window_load() {
     Layer *window_layer = window_get_root_layer(my_window);
     GRect bounds = layer_get_bounds(window_layer);
 
-    custom_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_CUSTOM_FONT_42));
+    custom_font = fonts_load_custom_font(resource_get_handle(CUSTOM_FONT));
 
     background_layer = layer_create(bounds);
     layer_set_update_proc(background_layer, draw_background);
 
-    time_layer = text_layer_create(GRect(0, 14, bounds.size.w, 80));
+    time_layer = text_layer_create(GRect(0, 0.083333*bounds.size.h, bounds.size.w, 80));
     text_layer_set_background_color(time_layer, GColorClear);
     text_layer_set_text_color(time_layer, color_top_text);
     text_layer_set_font(time_layer, custom_font);
     text_layer_set_text_alignment(time_layer, GTextAlignmentCenter);
 
-    lol_layer = text_layer_create(GRect(0, 98, bounds.size.w, 80));
+    lol_layer = text_layer_create(GRect(0, 0.583333*bounds.size.h, bounds.size.w, 80));
     text_layer_set_background_color(lol_layer, GColorClear);
     text_layer_set_text_color(lol_layer, color_bot_text);
     text_layer_set_font(lol_layer, custom_font);
